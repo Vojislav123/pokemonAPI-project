@@ -1,0 +1,16 @@
+
+header{
+    width: 1024px;
+}
+
+.imgLogo{
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.logoAnimated{
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}

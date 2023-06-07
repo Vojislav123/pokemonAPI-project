@@ -1,9 +1,20 @@
-import './App.css';
+import Homepage from "./components/pages/Homepage";
+import Favourites from "./components/pages/Favourites";
+import Header from "./components/pages/Header";
+import Footer from "./components/pages/Footer";
 
-function App() {
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+
+const App = () => {
   return (
     <div className="App">
-        Pocinem
+      <Header />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/favourites" element={<Favourites />} />
+      </Routes>
+      <Footer />
     </div>
   );
 }
