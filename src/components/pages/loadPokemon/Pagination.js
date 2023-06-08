@@ -1,4 +1,5 @@
-import React from "react";
+import styles from '../css/Pagination.module.css'
+
 
 const Pagination = ({ currentPage, totalPages, goToPage }) => {
   const getPageNumbers = () => {
@@ -20,25 +21,39 @@ const Pagination = ({ currentPage, totalPages, goToPage }) => {
   };
 
   return (
-    <div>
-      <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
+
+    <div className={`flex items-center justify-between ${styles.paginationContainer}`}>
+      <button
+        onClick={() => goToPage(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-4 py-2 bg-gray-400 text-white rounded"
+      >
         Previous
       </button>
 
-      {getPageNumbers().map((pageNumber) => (
-        <button
-          key={pageNumber}
-          onClick={() => goToPage(pageNumber)}
-          className={pageNumber === currentPage ? "active" : ""}
-        >
-          {pageNumber}
-        </button>
-      ))}
+      <div className="flex items-center">
+        {getPageNumbers().map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => goToPage(pageNumber)}
+            className={`px-4 py-2 mx-1 ${
+              pageNumber === currentPage ? "bg-white text-gray-400" : "bg-gray-400 text-white"
+            } rounded`}
+          >
+            {pageNumber}
+          </button>
+        ))}
+      </div>
 
-      <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
+      <button
+        onClick={() => goToPage(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 bg-gray-400 text-white rounded"
+      >
         Next
       </button>
     </div>
+    
   );
 };
 

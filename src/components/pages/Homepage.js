@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
 import PokemonList from "./loadPokemon/PokemonList";
 import Pagination from "./loadPokemon/Pagination";
 import SearchBar from "./loadPokemon/SearchBar";
@@ -7,7 +8,6 @@ const Homepage = () => {
   const [pokemons, setPokemons] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 24;
-  const totalItems = 864;
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
 
@@ -17,13 +17,29 @@ const Homepage = () => {
 
   const fetchPokemons = async () => {
     try {
-      const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=864");
+      let url = `https://pokeapi.co/api/v2/pokemon?limit=864`;
+
+      const response = await fetch(url);
       const data = await response.json();
-      setPokemons(data.results);
+      const results = data.results;
+
+      const pokemonDetails = await Promise.all(
+        results.map(async (pokemon) => {
+          const response = await fetch(pokemon.url);
+          const data = await response.json();
+          return {
+            id: data.id,
+            name: pokemon.name,
+          };
+        })
+      );
+
+      setPokemons(pokemonDetails);
     } catch (error) {
       console.log(error);
     }
   };
+
 
   const handleSearch = (searchTerm, sortOrder) => {
     setSearchTerm(searchTerm);
