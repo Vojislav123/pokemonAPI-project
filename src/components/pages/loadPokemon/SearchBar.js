@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-const SearchBar = ({ handleSearch }) => {
+const SearchBar = ({ handleSearch, sortOrder, setSortOrder }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("default");
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -23,13 +22,13 @@ const SearchBar = ({ handleSearch }) => {
         placeholder="Search Pokémon..."
         value={searchTerm}
         onChange={handleInputChange}
-        className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 text-black"
+        className="px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:border-blue-300 text-black rounded-xl"
       />
 
       <select
         value={sortOrder}
         onChange={handleSortOrderChange}
-        className="ml-2 px-4 py-2 bg-gray-400 rounded focus:outline-none focus:ring focus:border-blue-300"
+        className="ml-4 px-4 py-2 bg-gray-400 focus:outline-none focus:ring focus:border-blue-300 rounded-xl"
       >
         <option value="default">Default</option>
         <option value="asc">A-Z</option>

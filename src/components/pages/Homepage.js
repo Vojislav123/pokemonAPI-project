@@ -4,16 +4,22 @@ import PokemonList from "./loadPokemon/PokemonList";
 import Pagination from "./loadPokemon/Pagination";
 import SearchBar from "./loadPokemon/SearchBar";
 
-const Homepage = () => {
+const Homepage = ({ isReload, setIsReload }) => {
   const [pokemons, setPokemons] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 24;
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
+  const [sortOrder, setSortOrder] = useState("default");
+  const itemsPerPage = 24;
 
   useEffect(() => {
+    if (isReload) {
+      setCurrentPage(1);
+      setIsReload(false);
+      setSortOrder("default");
+      setSearchTerm("");
+    }
     fetchPokemons();
-  }, []);
+  }, [isReload, setIsReload]);
 
   const fetchPokemons = async () => {
     try {
@@ -22,24 +28,24 @@ const Homepage = () => {
       const response = await fetch(url);
       const data = await response.json();
       const results = data.results;
-
-      const pokemonDetails = await Promise.all(
-        results.map(async (pokemon) => {
-          const response = await fetch(pokemon.url);
-          const data = await response.json();
+      setPokemons(
+        results.map((item, index) => {
           return {
-            id: data.id,
-            name: pokemon.name,
+            name: item.name,
+            imageUrl: `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${(
+              index + 1
+            )
+              .toString()
+              .padStart(3, "0")}.png`,
+            url: item.url,
+            id:index
           };
         })
       );
-
-      setPokemons(pokemonDetails);
     } catch (error) {
       console.log(error);
     }
   };
-
 
   const handleSearch = (searchTerm, sortOrder) => {
     setSearchTerm(searchTerm);
@@ -70,7 +76,11 @@ const Homepage = () => {
 
   return (
     <div>
-      <SearchBar handleSearch={handleSearch} />
+      <SearchBar
+        handleSearch={handleSearch}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+      />
       <PokemonList pokemons={paginatedPokemons} />
       <Pagination
         currentPage={currentPage}

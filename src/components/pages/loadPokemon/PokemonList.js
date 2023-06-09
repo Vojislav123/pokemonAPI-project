@@ -1,28 +1,57 @@
-
+import { useState } from "react";
+import PokeModal from "./PokeModal";
+import LikePokemon from "./LikePokemon";
 
 const PokemonList = ({ pokemons }) => {
-  const getImageUrl = (pokemonId) => {
-    return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokemonId
-      .toString()
-      .padStart(3, "0")}.png`;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPokemon, setCurrentPokemon] = useState({});
+  const openDetail = async (pokemon) => {
+    const response = await fetch(pokemon.url);
+    const detail = await response.json();
+    const pokemonDetail = {
+      abilities: detail.abilities,
+      name: pokemon.name,
+      types: detail.types,
+      species: detail.species,
+      imageUrl: pokemon.imageUrl,
+      weight: detail.weight,
+      height: detail.height,
+    };
+
+    setIsModalOpen(true);
+    setCurrentPokemon(pokemonDetail);
+    console.log(pokemonDetail);
   };
 
-  return (
+  
 
+  
+
+  return (
     <div className="grid grid-cols-6 gap-4">
-      {pokemons.map((pokemon) => (
-        <div key={pokemon.name} className="text-center ">
-          <img
-            src={getImageUrl(pokemon.id)}
-            alt={pokemon.name}
-            className="mx-auto w-24 h-24"
-          />
-          <div className="mt-2">{pokemon.name}</div>
+      {
+      pokemons.map((pokemon, index) => (
+        <div>
+          <div
+            key={pokemon.name}
+            className="text-center cursor-pointer "
+            onClick={() => openDetail(pokemon)}
+          >
+            <img
+              src={pokemon.imageUrl}
+              alt={pokemon.name}
+              className="mx-auto my-2 w-20 h-20"
+            />
+            <div className="mt-2">{pokemon.name}</div>
+          </div>
+         <LikePokemon index={pokemon.id}/>
         </div>
       ))}
+      {isModalOpen && (
+        <PokeModal setIsModalOpen={setIsModalOpen} pokemon={currentPokemon} />
+      )}
     </div>
   );
-
 };
 
 export default PokemonList;
